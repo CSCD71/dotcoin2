@@ -109,10 +109,13 @@ function errorHandler(err, req, res, next) {
 app.use(express.static(resolve(databasePath)));
 
 async function run(options) {
-  const mnemonic = await readMnemonic(options.wallet, options.password);
   const config = readConfig(options.config);
-  server = new DotcoinServer({ path: databasePath, mnemonic, ...config });
-  await server.init(options.account);
+  server = new DotcoinServer({ path: databasePath, ...config });
+  let blocks = await server.getBlocks(0, 1);
+  if (blocks.length == 0) {
+    const mnemonic = await readMnemonic(options.wallet, options.password);
+    await server.init(mnemonic, options.account);
+  }
   const port = parseInt(options.port);
   createServer(app).listen(port, function (err) {
     if (err) console.log(err);

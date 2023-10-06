@@ -18,10 +18,9 @@ export class ValidationError extends Error {
 export class DotcoinServer {
   /**
    * initializes the Dotcoin server
-   * @param {object} config - contains the mnemonic, the mining difficulty, the merkle tree height, the coinbase amount and the NeDB path
+   * @param {object} config - contains the mining difficulty, the merkle tree height, the coinbase amount and the NeDB path
    */
   constructor(config) {
-    this.mnemonic = config.mnemonic || common.createMnemonic();
     this.difficulty = config.difficulty || 1;
     this.height = config.height || 8; // each block can have up to 2^8 transactions (including coinbase)
     this.amount = config.amount || 100; // coinbase amount
@@ -32,10 +31,11 @@ export class DotcoinServer {
   /**
    * creates the genesis block if there is no block in the database
    * that genesis block can have a mining difficulty set to 0 exceptionally
+   * @param {string} mnemonic - the wallet's mnemonic phrase
    * @param {number} account - the wallet's account that should be credited with the first coinbase transaction
    */
-  async init(account) {
-
+  async init(mnemonic, account) {
+      
   }
 
   /**
