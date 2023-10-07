@@ -1,22 +1,26 @@
 import { join } from "path";
 import { mkdirSync, readFileSync, existsSync, writeFileSync } from "fs";
 import { Command } from "commander";
+import axios from 'axios';
+import axiosRetry from 'axios-retry';
 
 import { DotcoinClient } from "../core/client.mjs";
 import { readConfig, readMnemonic, writeMnemonic } from "./storage.mjs";
+
+axiosRetry(axios, { retries: 5 });
 
 const databasePath = join("data", "client");
 
 async function syncDatabase(servername, path) {
   mkdirSync(databasePath, { recursive: true });
-  const transactions = await fetch(`${servername}/transactions.db`).then(
+  const transactions = await axios.get(`${servername}/transactions.db`).then(
     function (res) {
-      return res.text();
+      return res.data;
     },
   );
   await writeFileSync(join(databasePath, "transactions.db"), transactions);
-  const blocks = await fetch(`${servername}/blocks.db`).then(function (res) {
-    return res.text();
+  const blocks = await axios.get(`${servername}/blocks.db`).then(function (res) {
+    return res.data;
   });
   await writeFileSync(join(databasePath, "blocks.db"), blocks);
 }
@@ -63,16 +67,13 @@ async function transfer(account, address, amount, options) {
     address,
     amount,
   );
-  await fetch(`${options.node}/transactions/`, {
-    method: "PUT",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(transaction),
-  }).then(async function (res) {
-    if (res.status == 200)
-      return console.log(JSON.stringify(await res.json(), null, 2));
-    if (res.status == 400) throw new Error(`[error] ${await res.text()}`);
-    if (res.status == 500) throw new Error(`[bug] ${await res.text()}`);
-  });
+  await axios.put(`${options.node}/transactions/`, transaction)
+      .then(function (res) {
+        if (res.status == 200)
+          return console.log(JSON.stringify(res.data, null, 2));
+        if (res.status == 400) throw new Error(`[error] ${res.data}`);
+        if (res.status == 500) throw new Error(`[bug] ${res.data}`);
+      });
 }
 
 async function mine(account, options) {
@@ -81,16 +82,13 @@ async function mine(account, options) {
   await syncDatabase(options.node, config.path);
   const client = new DotcoinClient({ path: databasePath, mnemonic, ...config });
   const blockData = await client.mine(parseInt(account));
-  await fetch(`${options.node}/blocks/`, {
-    method: "PUT",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(blockData),
-  }).then(async function (res) {
-    if (res.status == 200)
-      return console.log(JSON.stringify(await res.json(), null, 2));
-    if (res.status == 400) throw new Error(`[error] ${await res.text()}`);
-    if (res.status == 500) throw new Error(`[bug] ${await res.text()}`);
-  });
+  await axios.put(`${options.node}/blocks/`, blockData, {proxy: false})
+        .then(function (res) {
+            if (res.status == 200)
+              return console.log(JSON.stringify(blockData, null, 2));
+            if (res.status == 400) throw new Error(`[error] ${res.data}`);
+            if (res.status == 500) throw new Error(`[bug] ${res.data}`);
+        });
 }
 
 const program = new Command();
