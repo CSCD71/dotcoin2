@@ -12,7 +12,7 @@ const salt = "D0tco1n4EvR";
 
 export function readConfig(filename) {
   if (!existsSync(filename)) {
-    throw new Error(`[error] config file ${options.wallet} does not exists`);
+    throw new Error(`[error] config file ${filename} does not exists`);
   } else {
     return JSON.parse(readFileSync(filename, "utf-8"));
   }

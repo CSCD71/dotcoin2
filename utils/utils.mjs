@@ -74,8 +74,7 @@ export function getBlockHash(block) {
     : new Uint8Array(0);
   const root = base58.decode(block.root);
   const nonce = base58.decode(block.nonce);
-  const timestamp = numToUint8Array(block.timestamp);
-  const output = new Uint8Array([...previous, ...root, ...timestamp, ...nonce]);
+  const output = new Uint8Array([...previous, ...root, ...nonce]);
   return base58.encode(keccak_256(output));
 }
 

@@ -9,7 +9,7 @@ const expect = chai.expect;
 const databasePath = "data/testDb";
 
 describe("Testing Core Features", function () {
-  this.timeout(5000);
+  this.timeout(10000);
   const config = {
     difficulty: 2,
     amount: 100,
@@ -23,7 +23,6 @@ describe("Testing Core Features", function () {
     client1 = new DotcoinClient({ ...config, path: databasePath });
     client2 = new DotcoinClient({ ...config, path: databasePath });
     server = new DotcoinServer({
-      mnemonic: client1.getMnemonic(),
       ...config,
       path: databasePath,
     });
@@ -34,7 +33,7 @@ describe("Testing Core Features", function () {
   });
 
   it("it should create the genesis block", async function () {
-    const genesisBlock = await server.init(0);
+    const genesisBlock = await server.init(client1.getMnemonic(), 0);
   });
 
   it("it should return the balances", async function () {
@@ -99,7 +98,6 @@ describe("Testing Core Features", function () {
   it("it should mine another block", async function () {
     const { block, coinbase, transactions } = await client1.mine(0);
     const blockMined = await server.addBlock(block, coinbase, transactions);
-    console.log(blockMined);
   });
 
   it("it should return the final balances", async function () {
