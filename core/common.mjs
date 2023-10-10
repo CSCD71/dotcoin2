@@ -29,7 +29,7 @@ export async function getReceiveKeys(mnemonic, account) {
 }
 
 /**
- * returns the next unused changing key pair (public and private) for the given wallet's account
+ * returns the changing key pair (public and private) for the given wallet's account
  * @param {string} mnemonic - the wallet's mnemonic phrase
  * @param {number} account - the wallet account index
  */
