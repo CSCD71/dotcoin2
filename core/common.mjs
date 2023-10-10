@@ -40,7 +40,7 @@ export async function getChangeKeys(mnemonic, account) {
 /**
  * returns the child key(s) for the given parent's key
  * if the parent's key is a public key, it returns the child public key only {publicKey: ...}
- * if the parent's key is a private key, it returns both private and public keys {privateKey:, publicKeys: }
+ * if the parent's key is a private key, it returns both private and public key {privateKey:, publicKey: }
  * @param {string} key - base58-encoded key (either private or public)
  * @param {number} index - the child key index
  */
