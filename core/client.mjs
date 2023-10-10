@@ -37,7 +37,6 @@ export class DotcoinClient {
   /**
    * returns the receiving key (i.e public key) as a string
    * @param {number} account - the wallet account index
-   * @param {string} address - recipient's receiving address (i.e public key)
    */
   async getReceivingAddress(account) {
 
