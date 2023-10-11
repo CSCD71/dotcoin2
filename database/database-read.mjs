@@ -17,12 +17,12 @@ export class DatabaseRead {
     this.transactions = new Datastore({
       filename: join(path, "transactions.db"),
       autoload: false,
-      timestampData: false,
+      timestampData: true,
     });
     this.blocks = new Datastore({
       filename: join(path, "blocks.db"),
       autoload: false,
-      timestampData: false,
+      timestampData: true,
     });
   }
 
