@@ -13,13 +13,13 @@ const databasePath = join("data", "client");
 
 async function syncDatabase(servername, path) {
   mkdirSync(databasePath, { recursive: true });
-  const transactions = await axios.get(`${servername}/transactions.db`).then(
+  const transactions = await axios.get(`${servername}/transactions.db`, {responseType: 'blob'}).then(
     function (res) {
       return res.data;
     },
   );
   await writeFileSync(join(databasePath, "transactions.db"), transactions);
-  const blocks = await axios.get(`${servername}/blocks.db`).then(function (res) {
+  const blocks = await axios.get(`${servername}/blocks.db`, {responseType: 'blob'}).then(function (res) {
     return res.data;
   });
   await writeFileSync(join(databasePath, "blocks.db"), blocks);

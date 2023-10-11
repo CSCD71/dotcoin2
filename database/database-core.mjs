@@ -1,6 +1,12 @@
 /* Copyright (C) 2023 Thierry Sans - All Rights Reserved
  */
 
+function clean(element){
+    if (!element) return element;
+    const { createdAt, updatedAt, ...result } = element  
+    return result;
+}
+
 /**
  * adds an element to a collection (NeDB datastore)
  * @param {object} datastore - the collection
@@ -16,7 +22,7 @@ export function addElement(datastore, data) {
         if (err) {
           return reject(err);
         }
-        return resolve(element);
+        return resolve(clean(element));
       });
     });
   });
@@ -34,11 +40,11 @@ export function updateElement(datastore, query, data) {
       if (err) {
         return reject(err);
       }
-      datastore.update(query, data, function (err, element) {
+      datastore.update(query, data, {returnUpdatedDocs: true }, function (err, num, element) {
         if (err) {
           return reject(err);
         }
-        return resolve(element);
+        return resolve(clean(element));
       });
     });
   });
@@ -56,11 +62,11 @@ export function updateElements(datastore, query, data) {
       if (err) {
         return reject(err);
       }
-      datastore.update(query, data, { multi: true }, function (err, elements) {
+      datastore.update(query, data, { multi: true, returnUpdatedDocs: true }, function (err, num, elements) {
         if (err) {
           return reject(err);
         }
-        return resolve(elements);
+        return resolve(elements.map(clean));
       });
     });
   });
@@ -81,7 +87,7 @@ export function getElement(datastore, query) {
         if (err) {
           return reject(err);
         }
-        return resolve(element);
+        return resolve(clean(element));
       });
     });
   });
@@ -110,7 +116,7 @@ export function getElements(datastore, query, page, limit, sort) {
           if (err) {
             return reject(err);
           }
-          return resolve(elements);
+          return resolve(elements.map(clean));
         });
     });
   });
