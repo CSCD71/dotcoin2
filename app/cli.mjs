@@ -45,7 +45,7 @@ async function address(account, options) {
   const config = readConfig(options.config);
   const client = new DotcoinClient({ path: databasePath, mnemonic, ...config });
   const publicKey = await client.getReceivingAddress(parseInt(account));
-  console.log(`The address for account ${options.account} is ${publicKey}`);
+  console.log(`The address for account ${account} is ${publicKey}`);
 }
 
 async function balance(account, options) {
