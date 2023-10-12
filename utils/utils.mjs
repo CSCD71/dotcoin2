@@ -83,7 +83,7 @@ export function getBlockHash(block) {
 /**
  * returns the merkle root hash
  * @param {array<string>} leaves - the list of transaction _ids
- * @param {array<string>} height - the heigh of the merkle tree that determines the maximum number of leaves in the tree as 2^height
+ * @param {number} height - the heigh of the merkle tree that determines the maximum number of leaves in the tree as 2^height
  */
 export function getMerkleRoot(leaves, height) {
   const tree = new IncrementalMerkleTree(
