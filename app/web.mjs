@@ -100,13 +100,13 @@ app.get("/utxo/:address/", async function (req, res, next) {
   }
 });
 
-function errorHandler(err, req, res, next) {
-  if (err.name === 'ValidationError') {
-    return res.status(400).send(err);
+app.use(function (err, req, res, next) {
+  if (err.name === "ValidationError") {
+    return res.status(400).send(err.message);
   } else {
-    return res.status(500).send(err);
+    return res.status(500).send(err.message);
   }
-}
+});
 
 app.use(express.static(resolve(databasePath)));
 
