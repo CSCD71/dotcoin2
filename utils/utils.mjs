@@ -46,8 +46,10 @@ export function numToUint8Array(num) {
  */
 export function getTransactionHash(tx) {
   let output = new Uint8Array();
-  for (let utxoIn of tx.utxoIns) {
-    output = new Uint8Array([...output, ...keyToUint8Array(utxoIn)]);
+  if ("utxoIns" in tx) {
+    for (let utxoIn of tx.utxoIns) {
+      output = new Uint8Array([...output, ...keyToUint8Array(utxoIn)]);
+    }
   }
   for (let utxoOut of tx.utxoOuts) {
     output = new Uint8Array([

@@ -1,10 +1,10 @@
 /* Copyright (C) 2023 Thierry Sans - All Rights Reserved
  */
 
-function clean(element){
-    if (!element) return element;
-    const { createdAt, updatedAt, ...result } = element  
-    return result;
+function clean(element) {
+  if (!element) return element;
+  const { createdAt, updatedAt, ...result } = element;
+  return result;
 }
 
 /**
@@ -40,12 +40,17 @@ export function updateElement(datastore, query, data) {
       if (err) {
         return reject(err);
       }
-      datastore.update(query, data, {returnUpdatedDocs: true }, function (err, num, element) {
-        if (err) {
-          return reject(err);
-        }
-        return resolve(clean(element));
-      });
+      datastore.update(
+        query,
+        data,
+        { returnUpdatedDocs: true },
+        function (err, num, element) {
+          if (err) {
+            return reject(err);
+          }
+          return resolve(clean(element));
+        },
+      );
     });
   });
 }
@@ -62,12 +67,17 @@ export function updateElements(datastore, query, data) {
       if (err) {
         return reject(err);
       }
-      datastore.update(query, data, { multi: true, returnUpdatedDocs: true }, function (err, num, elements) {
-        if (err) {
-          return reject(err);
-        }
-        return resolve(elements.map(clean));
-      });
+      datastore.update(
+        query,
+        data,
+        { multi: true, returnUpdatedDocs: true },
+        function (err, num, elements) {
+          if (err) {
+            return reject(err);
+          }
+          return resolve(elements.map(clean));
+        },
+      );
     });
   });
 }

@@ -42,7 +42,9 @@ app.get("/transactions/", async function (req, res, next) {
     const page = parseInt(req.query.page) || 0;
     const limit = parseInt(req.query.limit) || 10;
     const sort = parseInt(req.query.sort) || -1;
-    const unconfirmed = req.query.unconfirmed ? req.query.unconfirmed == "true" : false;
+    const unconfirmed = req.query.unconfirmed
+      ? req.query.unconfirmed == "true"
+      : false;
     const transactions = await server.getTransactions(
       page,
       limit,
@@ -99,7 +101,7 @@ app.get("/utxo/:address/", async function (req, res, next) {
 });
 
 function errorHandler(err, req, res, next) {
-  if (err instanceof ValidationError) {
+  if (err.name === 'ValidationError') {
     return res.status(400).send(err);
   } else {
     return res.status(500).send(err);
