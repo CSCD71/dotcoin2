@@ -77,6 +77,8 @@ We can tell that:
 - it creates two UTXOs: one of the amount 30 for the recipient's address `xpub6Gq8nK...` and another of the amount 80 for the recipient's address `xpub6Gq8nKiCt...`. These UTXOs have not been spent yet since their `txIn` field is missing (and it cannot be otherwise since the transaction has not been mined yet).
 - it takes two addresses as inputs. These addresses are necessarily part of UTXOs from one or several past but yet confirmed transactions. These input addresses have UTXOs that is necessarily equal to 110 dotcoins (the total of output UTXOs)
 
+Each transaction can have up to 100 (maximum) `utxoIns` elements, 100 `signatures` elements and 100 `utxoOuts` elements. 
+
 ### Blocks
 
 Blocks are mined

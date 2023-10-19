@@ -104,7 +104,7 @@ app.use(function (err, req, res, next) {
   if (err.name === "ValidationError") {
     return res.status(400).send(err.message);
   } else {
-    return res.status(500).send(err.message);
+    throw err;
   }
 });
 

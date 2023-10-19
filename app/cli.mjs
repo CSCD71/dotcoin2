@@ -67,7 +67,7 @@ async function transfer(account, address, amount, options) {
   const transaction = await client.createTransaction(
     parseInt(account),
     address,
-    amount,
+    parseInt(amount),
   );
   await axios
     .put(`${options.node}/transactions/`, transaction)
