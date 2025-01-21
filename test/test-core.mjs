@@ -13,7 +13,7 @@ describe("Testing Core Features", function () {
   const config = {
     difficulty: 2,
     amount: 100,
-    height: 8,
+    limit: 1024,
   };
   let client1;
   let client2;
@@ -33,7 +33,7 @@ describe("Testing Core Features", function () {
   });
 
   it("it should create the genesis block", async function () {
-    const genesisBlock = await server.init(client1.getMnemonic(), 0);
+	  const genesisBlock = await server.init(client1.getMnemonic(), 0);
   });
 
   it("it should return the balances", async function () {

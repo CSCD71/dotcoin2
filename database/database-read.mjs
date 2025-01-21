@@ -3,7 +3,7 @@
 
 import { rmSync } from "fs";
 import { join } from "path";
-import Datastore from "nedb";
+import Datastore from "@seald-io/nedb";
 
 import { getElement, getElements } from "./database-core.mjs";
 
@@ -64,6 +64,32 @@ export class DatabaseRead {
   getTransactions(page, limit, sort = 1, unconfirmed = false) {
     let query = unconfirmed ? { block: null } : {};
     return getElements(this.transactions, query, page, limit, sort);
+  }
+  
+  /**
+   * retrieves the unconfirmed transactions that are older than the last block
+   * @param {number} page - the page index
+   * @param {numbers} limit - the number of elements per page
+   */
+  getExpiredTransactions(page, limit) {
+     const self = this;
+     return new Promise(function(resolve, reject){
+        self.blocks.loadDatabase(function (err) {
+           if (err) {
+             return reject(err);
+           }
+            self.blocks
+             .findOne({})
+             .sort({ createdAt: -1 })
+             .exec(function (err, block) {
+                 if (err) {
+                   return reject(err);
+                 }
+                 if (!block) return resolve([]);
+                 return resolve(getElements(self.transactions, { block: null, createdAt: {"let": block.createdAt }}, page, limit, 1));
+             });
+         });
+     });
   }
 
   /**

@@ -2,10 +2,9 @@
  */
 
 import { keccak_256 } from "@noble/hashes/sha3";
-import { IncrementalMerkleTree } from "@zk-kit/incremental-merkle-tree";
 import { HDKey } from "@scure/bip32";
-import { bigintToBuf, bufToBigint } from "bigint-conversion";
 import { base58check } from "@scure/base";
+import { MerkleTree } from 'merkletreejs';
 
 const base58 = base58check(keccak_256);
 
@@ -83,22 +82,9 @@ export function getBlockHash(block) {
 /**
  * returns the merkle root hash
  * @param {array<string>} leaves - the list of transaction _ids
- * @param {number} height - the heigh of the merkle tree that determines the maximum number of leaves in the tree as 2^height
  */
-export function getMerkleRoot(leaves, height) {
-  const tree = new IncrementalMerkleTree(
-    function (arr) {
-      const h = keccak_256(
-        new Uint8Array(...bigintToBuf(arr[0]), ...bigintToBuf(arr[1])),
-      );
-      return bufToBigint(h);
-    },
-    height,
-    BigInt(0),
-    2,
-    leaves.map(function (leaf) {
-      return bufToBigint(base58.decode(leaf));
-    }),
-  );
-  return base58.encode(bigintToBuf(tree.root));
+export function getMerkleRoot(ids) {	
+	const leaves = ids.map(x => keccak_256(x));
+	const tree = new MerkleTree(leaves, keccak_256);
+	return base58.encode(tree.getRoot());
 }
