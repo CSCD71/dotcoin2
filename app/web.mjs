@@ -5,7 +5,7 @@ import { createServer } from "http";
 import express from "express";
 
 import { DotcoinServer } from "../core/server.mjs";
-import { readConfig, readMnemonic } from "./storage.mjs";
+import { readConfig } from "./storage.mjs";
 
 const databasePath = join("data", "server");
 
@@ -113,11 +113,6 @@ app.use(express.static(resolve(databasePath)));
 async function run(options) {
   const config = readConfig(options.config);
   server = new DotcoinServer({ path: databasePath, ...config });
-  let blocks = await server.getBlocks(0, 1);
-  if (blocks.length == 0) {
-    const mnemonic = await readMnemonic(options.wallet, options.password);
-    await server.init(mnemonic, options.account);
-  }
   const port = parseInt(options.port);
   createServer(app).listen(port, function (err) {
     if (err) console.log(err);
@@ -128,10 +123,7 @@ async function run(options) {
 const program = new Command();
 
 program
-  .option("-w, --wallet <walletfile>", "wallet file", "./wallet.bin")
   .option("-c, --config <configfile>", "config file", "./config.json")
-  .option("-a, --account <account>", "account", 0)
-  .option("-p, --password <password>", "password")
   .option("-t, --port <port>", "port", "3000")
   .action(run);
 

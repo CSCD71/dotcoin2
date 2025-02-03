@@ -3,8 +3,6 @@
 
 import { DatabaseWrite } from "../database/database-write.mjs";
 
-import { DotcoinClient } from "./client.mjs";
-
 import * as utils from "../utils/utils.mjs";
 import * as common from "./common.mjs";
 
@@ -18,24 +16,14 @@ export class ValidationError extends Error {
 export class DotcoinServer {
   /**
    * initializes the Dotcoin server
-   * @param {object} config - contains the mining difficulty, the merkle tree height, the coinbase amount and the NeDB path
+   * @param {object} config - contains the mnemonic, the mining difficulty, the transaction limit, the coinbase amount and the NeDB path
    */
   constructor(config) {
-    this.difficulty = config.difficulty || 1;
-    this.height = config.height || 8; // each block can have up to 2^8 transactions (including coinbase)
-    this.amount = config.amount || 100; // coinbase amount
-    this.path = config.path || "data";
-    this.db = new DatabaseWrite(this.path);
-  }
-
-  /**
-   * creates the genesis block if there is no block in the database
-   * that genesis block can have a mining difficulty set to 0 exceptionally
-   * @param {string} mnemonic - the wallet's mnemonic phrase
-   * @param {number} account - the wallet's account that should be credited with the first coinbase transaction
-   */
-  async init(mnemonic, account) {
-      
+      this.difficulty = config.difficulty || 1;
+      this.limit = config.limit || 1024; // each block can have up to 2^10 transactions (including coinbase)
+      this.amount = config.amount || 100; // coinbase amount
+      this.path = config.path || "data";
+      this.db = new DatabaseWrite(this.path);
   }
 
   /**

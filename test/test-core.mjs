@@ -33,7 +33,8 @@ describe("Testing Core Features", function () {
   });
 
   it("it should create the genesis block", async function () {
-	  const genesisBlock = await server.init(client1.getMnemonic(), 0);
+      const { block, coinbase, transactions } = await client1.mine(0);
+      const blockMined = await server.addBlock(block, coinbase, transactions);
   });
 
   it("it should return the balances", async function () {

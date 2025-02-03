@@ -14,18 +14,18 @@ export class ClientError extends Error {
 }
 
 export class DotcoinClient {
-  /**
-   * initializes the Dotcoin client
-   * @param {object} config - contains the mnemonic, the mining difficulty, the merkle tree height, the coinbase amount and the NeDB path
-   */
-  constructor(config) {
-    this.mnemonic = config.mnemonic || common.createMnemonic(); // mnemonic for genesis block
-    this.difficulty = config.difficulty || 1; // mining difficulty
-    this.height = config.height || 8; // each block can have up to 2^8 transactions (including coinbase)
-    this.amount = config.amount || 100; // coinbase amount
-    this.path = config.path || "data"; // database path
-    this.db = new DatabaseRead(this.path);
-  }
+    /**
+     * initializes the Dotcoin client
+     * @param {object} config - contains the mnemonic, the mining difficulty, the transaction limit, the coinbase amount and the NeDB path
+     */
+    constructor(config) {
+      this.mnemonic = config.mnemonic || common.createMnemonic(); // mnemonic for genesis block
+      this.difficulty = config.difficulty || 1; // mining difficulty
+      this.limit = config.limit || 1024; // each block can have up to 2^10 transactions (including coinbase)
+      this.amount = config.amount || 100; // coinbase amount
+      this.path = config.path || "data"; // database path
+      this.db = new DatabaseRead(this.path);
+    }
 
   /**
    * returns the mnemonic as a string
